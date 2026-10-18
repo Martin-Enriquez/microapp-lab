@@ -8,7 +8,8 @@ Colección de microaplicaciones, prototipos y herramientas enfocadas en resolver
 
 | # | Microapp | Lenguaje / Tech | Estado | Descripción |
 |---|---|---|---|---|
-| 01 | [Calculadora de Envíos](./microapps/01-calculadora-envios) | Python 3 | 🟢 Funcional | Estima tarifas de envío por peso y modalidad (estándar/exprés). |
+| 01 | [Calculadora de Envíos](./microapps/01-calculadora-envios) | JS / HTML5 / Python | 🟢 Funcional | Cotizador logístico con recargo express, contraentrega (COD) y exportación a WhatsApp. |
+| 02 | [Scraper de Precios](./microapps/02-scraper-precios) | JS / HTML5 | 🟢 Funcional | Extractor y comparador visual de precios para e-commerce local. |
 
 ---
 
