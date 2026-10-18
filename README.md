@@ -16,5 +16,5 @@ Colección de microaplicaciones, prototipos y herramientas enfocadas en resolver
 
 1. Clona el repositorio:
    ```bash
-   git clone [https://github.com/tu-usuario/microapp-lab.git](https://github.com/tu-usuario/microapp-lab.git)
+   git clone [https://github.com/Martin-Enriquez/microapp-lab.git](https://github.com/Martin-Enriquez/microapp-lab.git)
    cd microapp-lab
