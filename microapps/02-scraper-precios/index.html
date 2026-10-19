@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extractor Universal de Precios</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px;
+      margin: 0;
+    }
+    .container {
+      background: var(--card);
+      max-width: 650px;
+      width: 100%;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+    }
+    h2 { margin: 0 0 4px 0; color: var(--primary); font-size: 1.5rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 20px; line-height: 1.4; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 6px; }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+      font-family: monospace;
+      resize: vertical;
+    }
+    .help-text { font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; }
+    
+    .button-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    button {
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-main { background: var(--primary); color: white; }
+    .btn-main:hover { background: var(--primary-hover); }
+    .btn-reset { background: #e2e8f0; color: #334155; border: 1px solid var(--border); }
+    .btn-reset:hover { background: #cbd5e1; }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+      display: none;
+    }
+    .card-stat {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .card-stat .value { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+    .card-stat .label { font-size: 0.75rem; color: var(--text-muted); }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .results-table th, .results-table td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .results-table th { background: #f8fafc; }
+    .badge-lowest {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+    .error-box {
+      margin-top: 16px;
+      padding: 12px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔍 Extractor Universal de Precios</h2>
+  <div class="subtitle">Copia el contenido o HTML de cualquier tienda (Mercado Libre, Amazon, OLX, etc.) y pégalo abajo para extraer y comparar los precios al instante.</div>
+
+  <div class="form-group">
+    <label for="rawInput">📥 Pegar Texto o HTML Copiado</label>
+    <textarea id="rawInput" rows="7" placeholder="Selecciona el texto/productos de la página web, copia (Ctrl+C / Cmd+C) y pégalo aquí..."></textarea>
+    <div class="help-text">💡 Tip: Puedes copiar bloques completos con múltiples productos y precios (ej: "$12.50", "USD 45.00", "US$ 10.00").</div>
+  </div>
+
+  <div class="button-group">
+    <button class="btn-main" onclick="procesarScraper()">⚡ Extraer y Comparar</button>
+    <button class="btn-reset" onclick="limpiarScraper()">🧹 Limpiar</button>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- Estadísticas Rápidas -->
+  <div class="summary-cards" id="summaryCards">
+    <div class="card-stat">
+      <div class="value" id="statTotal">0</div>
+      <div class="label">Items Encontrados</div>
+    </div>
+    <div class="card-stat">
+      <div class="value" id="statLowest">$0.00</div>
+      <div class="label">Precio Más Bajo</div>
+    </div>
+    <div class="card-stat">
+      <div class="value" id="statAvg">$0.00</div>
+      <div class="label">Precio Promedio</div>
+    </div>
+  </div>
+
+  <!-- Tabla de Resultados -->
+  <div id="contenedorResultados" style="display:none; margin-top: 10px;">
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Descripción / Producto Extracted</th>
+          <th>Precio</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="tablaCuerpo"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizador Logístico Profesional</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --accent: #16a34a;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px;
+      margin: 0;
+    }
+    .container {
+      background: var(--card);
+      max-width: 520px;
+      width: 100%;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    h2 { margin: 0; color: var(--primary); font-size: 1.5rem; font-weight: 700; }
+    .subtitle { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 22px; line-height: 1.4; }
+    
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 6px; }
+    
+    .help-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+      background-color: #fff;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-dim { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    
+    .dim-input { position: relative; }
+    .dim-label {
+      position: absolute;
+      right: 10px;
+      top: 11px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .option-card {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; }
+    .checkbox-group input { width: auto; height: 18px; width: 18px; cursor: pointer; }
+
+    .btn-calc {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+    .btn-calc:hover { background: var(--primary-hover); }
+
+    .result-card {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f0f9ff;
+      border-radius: 12px;
+      border: 1px solid #bae6fd;
+      display: none;
+    }
+    .result-header {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #bae6fd;
+    }
+    .result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.92rem; }
+    .result-total {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      border-top: 2px solid #93c5fd;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      margin-top: 16px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .btn-action:hover { opacity: 0.95; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="brand">
+    <h2>🚚 ExpressLogistics Ecuador</h2>
+  </div>
+  <div class="subtitle">Cotizador oficial para envíos corporativos y clientes particulares.</div>
+
+  <!-- Destino y Tipo de Servicio -->
+  <div class="grid-2">
+    <div class="form-group">
+      <label for="region">📍 Destino</label>
+      <select id="region">
+        <option value="pichincha">Pichincha (Urbano)</option>
+        <option value="nacional">Sierra / Costa (Nacional)</option>
+        <option value="oriente">Oriente / Amazonía</option>
+        <option value="galapagos">Galápagos (Insular)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoServicio">⚡ Velocidad</label>
+      <select id="tipoServicio">
+        <option value="estandar">Estándar (24-48h)</option>
+        <option value="express">Prioritario (24h) [+35%]</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Peso Real -->
+  <div class="form-group">
+    <label for="peso">⚖️ Peso Físico Real (kg)</label>
+    <input type="number" id="peso" placeholder="Ej. 0.5" step="0.1" min="0.1" value="0.5">
+    <div class="help-text">Pesado en báscula. Incluye hasta 1 kg inicial.</div>
+  </div>
+
+  <!-- Dimensiones -->
+  <div class="form-group">
+    <label>📐 Dimensiones del Paquete (cm)</label>
+    <div class="help-text">Fórmula IATA: <code>(Largo × Ancho × Alto) / 5000</code>. Se factura el peso mayor.</div>
+    <div class="grid-dim">
+      <div class="dim-input">
+        <input type="number" id="largo" value="20">
+        <span class="dim-label">cm</span>
+      </div>
+      <div class="dim-input">
+        <input type="number" id="ancho" value="15">
+        <span class="dim-label">cm</span>
+      </div>
+      <div class="dim-input">
+        <input type="number" id="alto" value="10">
+        <span class="dim-label">cm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opciones de Valor Añadido -->
+  <div class="option-card">
+    <div class="checkbox-group">
+      <input type="checkbox" id="cod" onchange="toggleCOD()">
+      <label for="cod" style="margin:0; cursor:pointer;">💵 Pago Contraentrega (Recaudar dinero al entregar)</label>
+    </div>
+    <div class="form-group" id="cod-box" style="display: none; margin-top: 10px; margin-bottom: 0;">
+      <label for="montoCOD" style="font-size: 0.8rem;">Monto a cobrar al destinatario ($)</label>
+      <input type="number" id="montoCOD" placeholder="Ej. 45.00" value="0">
+      <div class="help-text">Comisión por gestión de efectivo: $1.50 fijo o 3% del recaudo.</div>
+    </div>
+  </div>
+
+  <div class="option-card">
+    <div class="checkbox-group">
+      <input type="checkbox" id="asegurar" onchange="toggleSeguro()">
+      <label for="asegurar" style="margin:0; cursor:pointer;">🛡️ Seguro Declarado (2% del valor)</label>
+    </div>
+    <div class="form-group" id="seguro-box" style="display: none; margin-top: 10px; margin-bottom: 0;">
+      <label for="valorDeclarado" style="font-size: 0.8rem;">Valor comercial del producto ($)</label>
+      <input type="number" id="valorDeclarado" placeholder="Ej. 150.00" value="0">
+    </div>
+  </div>
+
+  <button class="btn-calc" onclick="calcularCotizacion()">Generar Cotización</button>
+
+  <!-- Resultado Comercial -->
+  <div class="result-card" id="resultado">
+    <div class="result-header">📋 DESGLOSE DE GUÍA LOGÍSTICA</div>
+    <div class="result-row"><span>Peso Facturable:</span><strong id="resPeso">0 kg</strong></div>
+    <div class="result-row"><span>Flete Base / Kg Extra:</span><span id="resBase">$0.00</span></div>
+    <div class="result-row" id="rowExpress" style="display:none;"><span>Recargo Express (35%):</span><span id="resExpress">$0.00</span></div>
+    <div class="result-row" id="rowCOD" style="display:none;"><span>Gestión de Cobro (COD):</span><span id="resCOD">$0.00</span></div>
+    <div class="result-row" id="rowSeguro" style="display:none;"><span>Seguro de Protección:</span><span id="resSeguro">$0.00</span></div>
+    <div class="result-row"><span>Subtotal:</span><span id="resSubtotal">$0.00</span></div>
+    <div class="result-row"><span>IVA (15%):</span><span id="resIVA">$0.00</span></div>
+    <div class="result-row result-total"><span>Total Guía:</span><span id="resTotal">$0.00</span></div>
+
+    <a id="btnWhatsapp" href="#" target="_blank" class="btn-action">
+      📲 Solicitar Guía por WhatsApp
+    </a>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
